@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>boxes.generators.slatwalldrillbox &#8212; boxes.py 0.1 documentation</title>
+    <title>boxes.generators.drillstand &#8212; boxes.py 0.1 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/nature.css" />
     <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
@@ -29,7 +29,7 @@
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../boxes.html" >boxes</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../generators.html" accesskey="U">boxes.generators</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">boxes.generators.slatwalldrillbox</a></li> 
+        <li class="nav-item nav-item-this"><a href="">boxes.generators.drillstand</a></li> 
       </ul>
     </div>  
 
@@ -38,7 +38,7 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <h1>Source code for boxes.generators.slatwalldrillbox</h1><div class="highlight"><pre>
+  <h1>Source code for boxes.generators.drillstand</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 <span class="c1"># Copyright (C) 2013-2019 Florian Festi</span>
 <span class="c1">#</span>
@@ -57,16 +57,21 @@
 
 <span class="kn">from</span> <span class="nn">boxes</span> <span class="kn">import</span> <span class="o">*</span>
 
-<div class="viewcode-block" id="SlatwallDrillBox"><a class="viewcode-back" href="../../../generators.html#boxes.generators.slatwalldrillbox.SlatwallDrillBox">[docs]</a><span class="k">class</span> <span class="nc">SlatwallDrillBox</span><span class="p">(</span><span class="n">Boxes</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Box for drills with each compartment with a different height&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="DrillStand"><a class="viewcode-back" href="../../../generators.html#boxes.generators.drillstand.DrillStand">[docs]</a><span class="k">class</span> <span class="nc">DrillStand</span><span class="p">(</span><span class="n">Boxes</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Box for drills with each compartment of a different height&quot;&quot;&quot;</span>
 
-    <span class="n">ui_group</span> <span class="o">=</span> <span class="s2">&quot;SlatWall&quot;</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;Note: `sh` gives the hight of the rows front to back. It though should have the same number of entries as `sy`. These heights are the one on the left side and increase throughout the row. To have each compartement a bit higher than the previous one the steps in `sh` should be a bit bigger than `extra_height`.</span>
+
+<span class="s2">Assembly: Start with putting the slots of the inner walls together. Then add the front and the back wall. Be especially careful with adding the bottom. It is always assymetrical and flush with the right/lower side while being a little short on the left/higher side to not protrude into the side wall. Add the very left and right walls last.</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+    <span class="n">ui_group</span> <span class="o">=</span> <span class="s2">&quot;Misc&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">Boxes</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">addSettingsArgs</span><span class="p">(</span><span class="n">edges</span><span class="o">.</span><span class="n">StackableSettings</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">addSettingsArgs</span><span class="p">(</span><span class="n">edges</span><span class="o">.</span><span class="n">FingerJointSettings</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">addSettingsArgs</span><span class="p">(</span><span class="n">edges</span><span class="o">.</span><span class="n">SlatWallSettings</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">buildArgParser</span><span class="p">(</span><span class="n">sx</span><span class="o">=</span><span class="s2">&quot;25*6&quot;</span><span class="p">,</span> <span class="n">sy</span><span class="o">=</span><span class="s2">&quot;10:20:30&quot;</span><span class="p">,</span> <span class="n">sh</span><span class="o">=</span><span class="s2">&quot;25:40:60&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">argparser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
@@ -98,19 +103,21 @@
         
         <span class="bp">self</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">tw</span><span class="p">,</span> <span class="n">th</span><span class="p">,</span> <span class="n">move</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">sideWall</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">extra_height</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">move</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">sideWall</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">extra_height</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">foot_height</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">move</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">thickness</span>
         <span class="n">x</span><span class="p">,</span> <span class="n">sx</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sy</span><span class="p">,</span> <span class="n">sh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sx</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sy</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sh</span>
         <span class="n">eh</span> <span class="o">=</span> <span class="n">extra_height</span>
+        <span class="n">fh</span> <span class="o">=</span> <span class="n">foot_height</span>
 
         <span class="n">tw</span><span class="p">,</span> <span class="n">th</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">sy</span><span class="p">)</span> <span class="o">+</span> <span class="n">t</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">sy</span><span class="p">)</span> <span class="o">+</span> <span class="n">t</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">sh</span><span class="p">)</span> <span class="o">+</span> <span class="n">eh</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">tw</span><span class="p">,</span> <span class="n">th</span><span class="p">,</span> <span class="n">move</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>
             <span class="k">return</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">moveTo</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">polyline</span><span class="p">(</span><span class="n">y</span><span class="o">+</span><span class="n">t</span><span class="p">,</span> <span class="mi">90</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="s2">&quot;B&quot;</span><span class="p">](</span><span class="n">sh</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">eh</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="s2">&quot;š&quot;</span><span class="p">](</span><span class="n">y</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="n">t</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">edgeCorner</span><span class="p">(</span><span class="s2">&quot;š&quot;</span><span class="p">,</span> <span class="s2">&quot;e&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="n">fh</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="s2">&quot;F&quot;</span><span class="p">](</span><span class="n">sh</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">eh</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">polyline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sy</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="n">sy</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
@@ -122,7 +129,8 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">fingerHolesAt</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="n">t</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">burn</span><span class="p">,</span> <span class="n">sh</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">eh</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">polyline</span><span class="p">(</span><span class="n">sy</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">90</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="s2">&quot;f&quot;</span><span class="p">](</span><span class="n">sh</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">eh</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">corner</span><span class="p">(</span><span class="mi">90</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">polyline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">90</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="n">fh</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">edgeCorner</span><span class="p">(</span><span class="s2">&quot;e&quot;</span><span class="p">,</span> <span class="s2">&quot;š&quot;</span><span class="p">)</span>
         
         <span class="bp">self</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">tw</span><span class="p">,</span> <span class="n">th</span><span class="p">,</span> <span class="n">move</span><span class="p">)</span>
 
@@ -177,7 +185,8 @@
         
         <span class="bp">self</span><span class="o">.</span><span class="n">moveTo</span><span class="p">(</span><span class="n">edges</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">spacing</span><span class="p">(),</span> <span class="n">eh</span><span class="o">+</span><span class="n">edges</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">margin</span><span class="p">(),</span> <span class="o">-</span><span class="n">a</span><span class="p">)</span>
 
-        <span class="n">edges</span><span class="p">[</span><span class="mi">0</span><span class="p">](</span><span class="n">x</span><span class="o">*</span><span class="n">fa</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="n">t</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">a</span><span class="p">)))</span>
+        <span class="n">edges</span><span class="p">[</span><span class="mi">0</span><span class="p">](</span><span class="n">x</span><span class="o">*</span><span class="n">fa</span> <span class="o">-</span> <span class="n">t</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">a</span><span class="p">)))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">corner</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">edgeCorner</span><span class="p">(</span><span class="n">edges</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">edges</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">90</span><span class="p">)</span>
         <span class="n">edges</span><span class="p">[</span><span class="mi">1</span><span class="p">](</span><span class="n">eh</span><span class="o">+</span><span class="n">h</span><span class="p">)</span>
@@ -207,34 +216,30 @@
         <span class="n">posy</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">t</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sy</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
             <span class="n">posy</span> <span class="o">+=</span> <span class="n">sy</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">t</span>
-            <span class="n">posx</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">posx</span> <span class="o">=</span> <span class="o">-</span><span class="n">t</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">a</span><span class="p">))</span> <span class="c1"># left side is clipped</span>
             <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sx</span><span class="p">)):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">fingerHolesAt</span><span class="p">(</span><span class="n">posx</span><span class="p">,</span> <span class="n">posy</span><span class="p">,</span> <span class="n">fa</span><span class="o">*</span><span class="n">sx</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
                 <span class="n">posx</span> <span class="o">+=</span> <span class="n">fa</span><span class="o">*</span><span class="n">sx</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">fa</span><span class="o">*</span><span class="n">t</span>
 
     <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># Add slat wall edges</span>
-        <span class="n">s</span> <span class="o">=</span> <span class="n">edges</span><span class="o">.</span><span class="n">SlatWallSettings</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">thickness</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span>
-                                   <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">edgesettings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SlatWall&quot;</span><span class="p">,</span> <span class="p">{}))</span>
-        <span class="n">s</span><span class="o">.</span><span class="n">edgeObjects</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">slatWallHolesAt</span> <span class="o">=</span> <span class="n">edges</span><span class="o">.</span><span class="n">SlatWallHoles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
-
         <span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">thickness</span>
         <span class="n">sx</span><span class="p">,</span> <span class="n">sy</span><span class="p">,</span> <span class="n">sh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sx</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sy</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sh</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">sx</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">sx</span><span class="p">)</span><span class="o">*</span><span class="n">t</span> <span class="o">-</span> <span class="n">t</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">sy</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">sy</span><span class="p">)</span><span class="o">*</span><span class="n">t</span> <span class="o">-</span> <span class="n">t</span>
 
+        <span class="n">bottom_angle</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">atan</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">extra_height</span> <span class="o">/</span> <span class="n">x</span><span class="p">)</span> <span class="c1"># radians</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">xOutsideWall</span><span class="p">(</span><span class="n">sh</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;fFeF&quot;</span><span class="p">,</span> <span class="n">move</span><span class="o">=</span><span class="s2">&quot;up&quot;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sy</span><span class="p">)):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">xWall</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">move</span><span class="o">=</span><span class="s2">&quot;up&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">xOutsideWall</span><span class="p">(</span><span class="n">sh</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;fCec&quot;</span><span class="p">,</span> <span class="n">move</span><span class="o">=</span><span class="s2">&quot;up&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xOutsideWall</span><span class="p">(</span><span class="n">sh</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;ffef&quot;</span><span class="p">,</span> <span class="n">move</span><span class="o">=</span><span class="s2">&quot;up&quot;</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">rectangularWall</span><span class="p">((</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">extra_height</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s2">&quot;FeFe&quot;</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">bottomCB</span><span class="p">],</span> <span class="n">move</span><span class="o">=</span><span class="s2">&quot;up&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rectangularWall</span><span class="p">(</span><span class="n">x</span><span class="o">/</span><span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">bottom_angle</span><span class="p">)</span><span class="o">-</span><span class="n">t</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">bottom_angle</span><span class="p">),</span> <span class="n">y</span><span class="p">,</span> <span class="s2">&quot;FeFe&quot;</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">bottomCB</span><span class="p">],</span> <span class="n">move</span><span class="o">=</span><span class="s2">&quot;up&quot;</span><span class="p">)</span>
         
-        <span class="bp">self</span><span class="o">.</span><span class="n">sideWall</span><span class="p">(</span><span class="n">move</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sideWall</span><span class="p">(</span><span class="n">foot_height</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">extra_height</span><span class="o">+</span><span class="n">t</span><span class="p">,</span> <span class="n">move</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sx</span><span class="p">)):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">yWall</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">move</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">sideWall</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">extra_height</span><span class="p">,</span> <span class="n">move</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sideWall</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">extra_height</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">move</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">)</span></div>
             
 </pre></div>
 
@@ -274,7 +279,7 @@
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../boxes.html" >boxes</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../generators.html" >boxes.generators</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">boxes.generators.slatwalldrillbox</a></li> 
+        <li class="nav-item nav-item-this"><a href="">boxes.generators.drillstand</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

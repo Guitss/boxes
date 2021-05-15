@@ -960,22 +960,23 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">angle</span> <span class="o">&gt;</span> <span class="mi">260</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;StackableSettings: &#39;angle&#39; is too big. Use value &lt; 260&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="StackableSettings.edgeObjects"><a class="viewcode-back" href="../../boxes.html#boxes.edges.StackableSettings.edgeObjects">[docs]</a>    <span class="k">def</span> <span class="nf">edgeObjects</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">boxes</span><span class="p">,</span> <span class="n">chars</span><span class="o">=</span><span class="s2">&quot;sS&quot;</span><span class="p">,</span> <span class="n">add</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fingersettings</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="StackableSettings.edgeObjects"><a class="viewcode-back" href="../../boxes.html#boxes.edges.StackableSettings.edgeObjects">[docs]</a>    <span class="k">def</span> <span class="nf">edgeObjects</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">boxes</span><span class="p">,</span> <span class="n">chars</span><span class="o">=</span><span class="s2">&quot;sSš&quot;</span><span class="p">,</span> <span class="n">add</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fingersettings</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">fingersettings</span> <span class="o">=</span> <span class="n">fingersettings</span> <span class="ow">or</span> <span class="n">boxes</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="s2">&quot;f&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">settings</span>
         <span class="n">edges</span> <span class="o">=</span> <span class="p">[</span><span class="n">StackableEdge</span><span class="p">(</span><span class="n">boxes</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">fingersettings</span><span class="p">),</span>
-                 <span class="n">StackableEdgeTop</span><span class="p">(</span><span class="n">boxes</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">fingersettings</span><span class="p">)]</span>
+                 <span class="n">StackableEdgeTop</span><span class="p">(</span><span class="n">boxes</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">fingersettings</span><span class="p">),</span>
+                 <span class="n">StackableFeet</span><span class="p">(</span><span class="n">boxes</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">fingersettings</span><span class="p">)]</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_edgeObjects</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">boxes</span><span class="p">,</span> <span class="n">chars</span><span class="p">,</span> <span class="n">add</span><span class="p">)</span></div></div>
 
-<div class="viewcode-block" id="StackableEdge"><a class="viewcode-back" href="../../boxes.html#boxes.edges.StackableEdge">[docs]</a><span class="k">class</span> <span class="nc">StackableEdge</span><span class="p">(</span><span class="n">BaseEdge</span><span class="p">):</span>
+<div class="viewcode-block" id="StackableBaseEdge"><a class="viewcode-back" href="../../boxes.html#boxes.edges.StackableBaseEdge">[docs]</a><span class="k">class</span> <span class="nc">StackableBaseEdge</span><span class="p">(</span><span class="n">BaseEdge</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Edge for having stackable Boxes. The Edge creates feet on the bottom</span>
 <span class="sd">    and has matching recesses on the top corners.&quot;&quot;&quot;</span>
 
     <span class="n">char</span> <span class="o">=</span> <span class="s2">&quot;s&quot;</span>
-    <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Stackable (bottom, finger joint holes)&quot;</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Abstract Stackable class&quot;</span>
     <span class="n">bottom</span> <span class="o">=</span> <span class="kc">True</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">boxes</span><span class="p">,</span> <span class="n">settings</span><span class="p">,</span> <span class="n">fingerjointsettings</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">StackableEdge</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">boxes</span><span class="p">,</span> <span class="n">settings</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">boxes</span><span class="p">,</span> <span class="n">settings</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">fingerjointsettings</span> <span class="o">=</span> <span class="n">fingerjointsettings</span>
 
@@ -984,10 +985,6 @@
         <span class="n">r</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">height</span> <span class="o">/</span> <span class="mf">2.0</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">angle</span><span class="p">)))</span>
         <span class="n">l</span> <span class="o">=</span> <span class="n">r</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">angle</span><span class="p">))</span>
         <span class="n">p</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bottom</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bottom</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">boxes</span><span class="o">.</span><span class="n">fingerHolesAt</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">height</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">holedistance</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">boxes</span><span class="o">.</span><span class="n">thickness</span><span class="p">,</span>
-                                     <span class="n">length</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">boxes</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">tabs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">boxes</span><span class="o">.</span><span class="n">corner</span><span class="p">(</span><span class="n">p</span> <span class="o">*</span> <span class="n">s</span><span class="o">.</span><span class="n">angle</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
@@ -1000,18 +997,38 @@
     <span class="k">def</span> <span class="nf">_height</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">height</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">holedistance</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">thickness</span>
 
-<div class="viewcode-block" id="StackableEdge.startwidth"><a class="viewcode-back" href="../../boxes.html#boxes.edges.StackableEdge.startwidth">[docs]</a>    <span class="k">def</span> <span class="nf">startwidth</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="StackableBaseEdge.startwidth"><a class="viewcode-back" href="../../boxes.html#boxes.edges.StackableBaseEdge.startwidth">[docs]</a>    <span class="k">def</span> <span class="nf">startwidth</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_height</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bottom</span> <span class="k">else</span> <span class="mi">0</span></div>
 
-<div class="viewcode-block" id="StackableEdge.margin"><a class="viewcode-back" href="../../boxes.html#boxes.edges.StackableEdge.margin">[docs]</a>    <span class="k">def</span> <span class="nf">margin</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="StackableBaseEdge.margin"><a class="viewcode-back" href="../../boxes.html#boxes.edges.StackableBaseEdge.margin">[docs]</a>    <span class="k">def</span> <span class="nf">margin</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="mi">0</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bottom</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">height</span></div></div>
 
+<div class="viewcode-block" id="StackableEdge"><a class="viewcode-back" href="../../boxes.html#boxes.edges.StackableEdge">[docs]</a><span class="k">class</span> <span class="nc">StackableEdge</span><span class="p">(</span><span class="n">StackableBaseEdge</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Edge for having stackable Boxes. The Edge creates feet on the bottom</span>
+<span class="sd">    and has matching recesses on the top corners.&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="StackableEdgeTop"><a class="viewcode-back" href="../../boxes.html#boxes.edges.StackableEdgeTop">[docs]</a><span class="k">class</span> <span class="nc">StackableEdgeTop</span><span class="p">(</span><span class="n">StackableEdge</span><span class="p">):</span>
+    <span class="n">char</span> <span class="o">=</span> <span class="s2">&quot;s&quot;</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Stackable (bottom, finger joint holes)&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">boxes</span><span class="o">.</span><span class="n">fingerHolesAt</span><span class="p">(</span>
+            <span class="mi">0</span><span class="p">,</span>
+            <span class="n">s</span><span class="o">.</span><span class="n">height</span> <span class="o">+</span> <span class="n">s</span><span class="o">.</span><span class="n">holedistance</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">boxes</span><span class="o">.</span><span class="n">thickness</span><span class="p">,</span>
+            <span class="n">length</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__call__</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="StackableEdgeTop"><a class="viewcode-back" href="../../boxes.html#boxes.edges.StackableEdgeTop">[docs]</a><span class="k">class</span> <span class="nc">StackableEdgeTop</span><span class="p">(</span><span class="n">StackableBaseEdge</span><span class="p">):</span>
     <span class="n">char</span> <span class="o">=</span> <span class="s2">&quot;S&quot;</span>
     <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Stackable (top)&quot;</span>
     <span class="n">bottom</span> <span class="o">=</span> <span class="kc">False</span></div>
 
+<div class="viewcode-block" id="StackableFeet"><a class="viewcode-back" href="../../boxes.html#boxes.edges.StackableFeet">[docs]</a><span class="k">class</span> <span class="nc">StackableFeet</span><span class="p">(</span><span class="n">StackableBaseEdge</span><span class="p">):</span>
+    <span class="n">char</span> <span class="o">=</span> <span class="s2">&quot;š&quot;</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Stackable feet (bottom)&quot;</span>
+
+    <span class="k">def</span> <span class="nf">_height</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">height</span></div>
 
 <span class="c1">#############################################################################</span>
 <span class="c1">####     Hinges</span>
@@ -2506,7 +2523,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2016, Florian Festi.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.0.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.1.
     </div>
   </body>
 </html>
