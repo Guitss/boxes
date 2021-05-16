@@ -57,8 +57,9 @@
 
 <span class="kn">from</span> <span class="nn">boxes</span> <span class="kn">import</span> <span class="n">Boxes</span><span class="p">,</span> <span class="n">edges</span><span class="p">,</span> <span class="n">boolarg</span>
 
+
 <div class="viewcode-block" id="PaintStorage"><a class="viewcode-back" href="../../../generators.html#boxes.generators.paintbox.PaintStorage">[docs]</a><span class="k">class</span> <span class="nc">PaintStorage</span><span class="p">(</span><span class="n">Boxes</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Stackable paint storage&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Stackable storage for hobby paint or other things&quot;&quot;&quot;</span>
 
     <span class="n">webinterface</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="n">ui_group</span> <span class="o">=</span> <span class="s2">&quot;Shelf&quot;</span> <span class="c1"># see ./__init__.py for names</span>
@@ -83,6 +84,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">argparser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
             <span class="s2">&quot;--hexpattern&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">boolarg</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
             <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Use hexagonal arrangement for the holes instead of orthogonal&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">argparser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">&quot;--drawer&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">boolarg</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Create a stackable drawer instead&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">paintholes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="s2">&quot;Place holes for the paintcans evenly&quot;</span>
@@ -111,12 +115,10 @@
                           <span class="n">j</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">candiameter</span><span class="o">+</span><span class="n">spacing_x</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">candiameter</span><span class="o">+</span><span class="n">spacing_x</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span>
                           <span class="bp">self</span><span class="o">.</span><span class="n">candiameter</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
 
-
     <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># adjust to the variables you want in the local scope</span>
         <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span>
         <span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">thickness</span>
-
 
         <span class="n">stack</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="s1">&#39;s&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">settings</span>
         <span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">canheight</span> <span class="o">-</span> <span class="n">stack</span><span class="o">.</span><span class="n">height</span> <span class="o">-</span> <span class="n">stack</span><span class="o">.</span><span class="n">holedistance</span> <span class="o">+</span> <span class="n">t</span>
@@ -125,24 +127,53 @@
         <span class="n">hh</span> <span class="o">=</span> <span class="n">h</span><span class="o">/</span><span class="mf">4.</span>
         <span class="n">hr</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">hx</span><span class="p">,</span> <span class="n">hh</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
 
-        <span class="c1"># render your parts here</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">rectangularWall</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="s2">&quot;eseS&quot;</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="p">[</span>
-            <span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">rectangularHole</span><span class="p">(</span><span class="n">h</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span> <span class="n">x</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span> <span class="n">hh</span><span class="p">,</span> <span class="n">hx</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="n">hr</span><span class="p">),</span>
-            <span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">fingerHolesAt</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">canheight</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">)],</span>
-                             <span class="n">move</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">rectangularWall</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="s2">&quot;efef&quot;</span><span class="p">,</span>
-                             <span class="n">move</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">drawer</span><span class="p">:</span>
+            <span class="n">wall_keys</span> <span class="o">=</span> <span class="s2">&quot;EsES&quot;</span>
+            <span class="n">wall_callbacks</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">rectangularHole</span><span class="p">(</span><span class="n">h</span> <span class="o">/</span> <span class="mi">3</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span> <span class="o">-</span> <span class="n">t</span><span class="p">,</span> <span class="n">hh</span><span class="p">,</span> <span class="n">hx</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="n">hr</span><span class="p">),</span>
+                <span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">fingerHolesAt</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">canheight</span> <span class="o">/</span> <span class="mi">3</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+            <span class="p">]</span>
+            <span class="n">bottom_keys</span> <span class="o">=</span> <span class="s2">&quot;EfEf&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">wall_keys</span> <span class="o">=</span> <span class="s2">&quot;FsFS&quot;</span>
+            <span class="n">wall_callbacks</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">rectangularHole</span><span class="p">(</span><span class="n">h</span> <span class="o">/</span> <span class="mi">3</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span> <span class="o">-</span> <span class="n">t</span><span class="p">,</span> <span class="n">hh</span><span class="p">,</span> <span class="n">hx</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="n">hr</span><span class="p">)</span>
+            <span class="p">]</span>
+            <span class="n">bottom_keys</span> <span class="o">=</span> <span class="s2">&quot;FfFf&quot;</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">rectangularWall</span><span class="p">(</span><span class="mf">0.8</span><span class="o">*</span><span class="n">stack</span><span class="o">.</span><span class="n">height</span><span class="o">+</span><span class="n">stack</span><span class="o">.</span><span class="n">holedistance</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="s2">&quot;eeee&quot;</span><span class="p">,</span>
-                             <span class="n">move</span><span class="o">=</span><span class="s2">&quot;up&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">rectangularWall</span><span class="p">(</span><span class="mf">0.8</span><span class="o">*</span><span class="n">stack</span><span class="o">.</span><span class="n">height</span><span class="o">+</span><span class="n">stack</span><span class="o">.</span><span class="n">holedistance</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="s2">&quot;eeee&quot;</span><span class="p">,</span>
-                             <span class="n">move</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">rectangularWall</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="s2">&quot;efef&quot;</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">paintholes</span><span class="p">],</span>
-                             <span class="n">move</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">rectangularWall</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="s2">&quot;eseS&quot;</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="p">[</span>
-            <span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">rectangularHole</span><span class="p">(</span><span class="n">h</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span> <span class="n">x</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span> <span class="n">hh</span><span class="p">,</span> <span class="n">hx</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="n">hr</span><span class="p">),</span>
-            <span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">fingerHolesAt</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">canheight</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">)],</span>
-                             <span class="n">move</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">)</span></div>
+
+        <span class="c1"># Walls</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rectangularWall</span><span class="p">(</span>
+            <span class="n">h</span><span class="p">,</span> <span class="n">x</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">t</span><span class="p">,</span> <span class="n">wall_keys</span><span class="p">,</span>
+            <span class="n">ignore_widths</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span>
+            <span class="n">callback</span><span class="o">=</span><span class="n">wall_callbacks</span><span class="p">,</span> <span class="n">move</span><span class="o">=</span><span class="s2">&quot;up&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rectangularWall</span><span class="p">(</span>
+            <span class="n">h</span><span class="p">,</span> <span class="n">x</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">t</span><span class="p">,</span> <span class="n">wall_keys</span><span class="p">,</span>
+            <span class="n">ignore_widths</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span>
+            <span class="n">callback</span><span class="o">=</span><span class="n">wall_callbacks</span><span class="p">,</span> <span class="n">move</span><span class="o">=</span><span class="s2">&quot;right&quot;</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Plates</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rectangularWall</span><span class="p">(</span>
+            <span class="mf">0.8</span> <span class="o">*</span> <span class="n">stack</span><span class="o">.</span><span class="n">height</span> <span class="o">+</span> <span class="n">stack</span><span class="o">.</span><span class="n">holedistance</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="s2">&quot;eeee&quot;</span><span class="p">,</span> <span class="n">move</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rectangularWall</span><span class="p">(</span>
+            <span class="mf">0.8</span> <span class="o">*</span> <span class="n">stack</span><span class="o">.</span><span class="n">height</span> <span class="o">+</span> <span class="n">stack</span><span class="o">.</span><span class="n">holedistance</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="s2">&quot;eeee&quot;</span><span class="p">,</span> <span class="n">move</span><span class="o">=</span><span class="s2">&quot;down right&quot;</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Bottom</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rectangularWall</span><span class="p">(</span>
+            <span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="n">t</span><span class="p">,</span> <span class="n">bottom_keys</span><span class="p">,</span> <span class="n">ignore_widths</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span> <span class="n">move</span><span class="o">=</span><span class="s2">&quot;up&quot;</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">drawer</span><span class="p">:</span>
+            <span class="c1"># Top</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rectangularWall</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="s2">&quot;efef&quot;</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">paintholes</span><span class="p">],</span> <span class="n">move</span><span class="o">=</span><span class="s2">&quot;up&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Sides</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rectangularWall</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="s2">&quot;efff&quot;</span><span class="p">,</span> <span class="n">move</span><span class="o">=</span><span class="s2">&quot;up&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rectangularWall</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="s2">&quot;efff&quot;</span><span class="p">,</span> <span class="n">move</span><span class="o">=</span><span class="s2">&quot;up&quot;</span><span class="p">)</span></div>
 </pre></div>
 
             <div class="clearer"></div>
