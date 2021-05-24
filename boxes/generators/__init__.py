@@ -20,6 +20,7 @@ class UIGroup:
         self.generators.sort(key=lambda b:getattr(b, '__name__', None) or b.__class__.__name__)
 
 ui_groups = [
+    UIGroup("Personal builds", "Guillaume's boxes =)"),
     UIGroup("Box", "Boxes"),
     UIGroup("FlexBox", "Boxes with flex"),
     UIGroup("Tray", "Trays and Drawer Inserts"),
